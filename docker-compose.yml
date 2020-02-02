@@ -1,0 +1,8 @@
+version: '0.1'
+services:
+  postgres :
+    container_name: cripto_postgres
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
