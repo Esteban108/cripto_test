@@ -1,6 +1,8 @@
+from sqlalchemy import Numeric, cast
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
+from back_end.api.utils.decorators import sql_errors_controller
 from ..data_access.models import Transaction
 from ..data_access.models import User as MUser
 from ..schemas import User, UserDB
@@ -11,11 +13,13 @@ class Operations:
     tags = ["Users"]
 
     @staticmethod
+    @sql_errors_controller
     def op_get(db: Session, user_name: str):
         q = db.query(MUser).filter(MUser.username == user_name)
         return q.one()
 
     @staticmethod
+    @sql_errors_controller
     def op_create(db: Session, obj: UserDB):
         db_obj = MUser(**obj.dict())
 
@@ -25,12 +29,14 @@ class Operations:
         return db_obj
 
     @staticmethod
+    @sql_errors_controller
     def op_delete(db: Session, user_name: str):
         db.query(MUser).filter(MUser.username == user_name).delete()
         db.commit()
         return True
 
     @staticmethod
+    @sql_errors_controller
     def op_update(db: Session, obj: User):
         db.query(MUser).filter(MUser.username == obj.username) \
             .update(obj.dict(exclude={'user_type', 'username'}))
@@ -78,11 +84,12 @@ class Operations:
     """
 
     @staticmethod
+    @sql_errors_controller
     def get_balance(db: Session, user_name):
-        q_positives = db.query(Transaction.coin_id, func.sum(Transaction.send_value).label("total")) \
+        q_positives = db.query(Transaction.coin_id, cast(func.sum(Transaction.send_value), Numeric).label("total")) \
             .filter(Transaction.user_receiver_username == user_name) \
             .group_by(Transaction.coin_id)
-        q_negatives = db.query(Transaction.coin_id, func.sum(Transaction.send_value).label("total")) \
+        q_negatives = db.query(Transaction.coin_id, cast(func.sum(Transaction.send_value), Numeric).label("total")) \
             .filter(Transaction.user_sender_username == user_name) \
             .group_by(Transaction.coin_id)
 

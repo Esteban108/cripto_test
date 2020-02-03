@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 
 
 class Coin(BaseModel):
@@ -29,16 +29,34 @@ class UserType(BaseModel):
 
 class User(BaseModel):
     username: str
-    email: EmailStr
     status: int = 1
 
     type_id: int
+
+    @validator('username')
+    def check_username(cls, v):
+        if ' ' in v:
+            raise ValueError('username not contain a space')
+        return v
+
+    @validator('status')
+    def check_status(cls, v):
+        if v not in [0, 1]:
+            raise ValueError('status only 1(active) or 0(disable)')
+        return v
+
+    @validator('type_id')
+    def check_type(cls, v):
+        if v not in [1, 2]:  # TODO: best read of db and storage in redis for cache
+            raise ValueError('status only 1(ADMIN) 2(NORMAL)')
+        return v
 
     class Config:
         orm_mode = True
 
 
 class UserDB(User):
+    email: EmailStr
     password: str
 
 
@@ -54,6 +72,12 @@ class Transaction(BaseModel):
     type_id: int
     user_sender_username: str = None
     user_receiver_username: str = None
+
+    @validator('type_id')
+    def check_type(cls, v):
+        if v not in [1, 2, 3]:  # TODO: best read of db and storage in redis for cache
+            raise ValueError('status only 1(DEBITO) 2(CARGA) 3(TRANSFERENCIA)')
+        return v
 
     class Config:
         orm_mode = True

@@ -4,7 +4,6 @@ from datetime import date, datetime
 from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, Text, Sequence
 from sqlalchemy.dialects.postgresql import MONEY
 from sqlalchemy.orm import relationship
-
 from api.data_access import Base
 
 
@@ -48,7 +47,7 @@ class User(Base):
 class Transaction(Base):
     __tablename__ = 'c_transaction'
 
-    send_value: int = Column(MONEY, nullable=False)
+    send_value: MONEY = Column(MONEY, nullable=False)
     date: datetime = Column(DateTime(True), nullable=False, index=True)
     id: int = Column(Integer, Sequence('seq_transaction', metadata=Base.metadata), primary_key=True)
     coin_id = Column(ForeignKey('c_coins.id', onupdate='CASCADE', match='FULL'), nullable=False, index=True)

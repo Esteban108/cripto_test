@@ -1,21 +1,22 @@
 from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 
 from ..operations import OpUser
-from back_end.api.depends.login_depends import op_login, validate_normal_user
+from back_end.api.depends.login_depends import op_login, validate_normal_user, validate_admin
 from ..schemas import User, UserDB, Status, Token
 from back_end.api.depends.depends import get_db
 from ..utils.hash import pwd_context
 
 router = APIRouter()
 
-
+""" IS NOT NECESSARY
 @router.get("/users/{user_name}", response_model=User, tags=OpUser.tags)
 def get(user_name: str, session: Session = Depends(get_db), user_log: dict = Depends(validate_normal_user)):
     data = OpUser.op_get(session, user_name)
     return data
+"""
 
 
 @router.get("/user/balance", tags=OpUser.tags)
@@ -26,6 +27,17 @@ def get(session: Session = Depends(get_db), user_log: dict = Depends(validate_no
 
 @router.post("/user/", response_model=User, tags=OpUser.tags)
 def create(user: UserDB, session: Session = Depends(get_db)):
+    user.password = pwd_context.hash(user.password)
+    if user.type_id != 2:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="Only can create normal user",
+        )
+    return OpUser.op_create(session, user)
+
+
+@router.post("/user_admin/", response_model=User, tags=OpUser.tags)
+def create2(user: UserDB, session: Session = Depends(get_db), user_log: dict = Depends(validate_admin)):
     user.password = pwd_context.hash(user.password)
     return OpUser.op_create(session, user)
 

@@ -6,3 +6,6 @@ services:
     restart: always
     ports:
       - "5432:5432"
+  redis:
+        container_name: cripto_redis
+        image: redis:alpine

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from ..utils.decorators import sql_errors_controller
 from ..data_access.models import Coin as MCoin
 from ..schemas import Coin
 
@@ -9,7 +10,8 @@ class Operations:
     tags = ["Coins"]
 
     @staticmethod
-    def op_get(db: Session, cid: str = None, skip=None, limit=None):
+    @sql_errors_controller
+    def op_get(db: Session, cid: str = None, skip=None, limit=None) -> [MCoin]:
 
         q = db.query(MCoin)
 
@@ -23,6 +25,7 @@ class Operations:
         return q.all()
 
     @staticmethod
+    @sql_errors_controller
     def op_create(db: Session, obj: Coin):
         db_obj = MCoin(**obj.dict())
 
@@ -32,12 +35,14 @@ class Operations:
         return db_obj
 
     @staticmethod
+    @sql_errors_controller
     def op_delete(db: Session, cid: str):
         db.query(MCoin).filter(MCoin.id == cid).delete()
         db.commit()
         return True
 
     @staticmethod
+    @sql_errors_controller
     def op_update(db: Session, obj: Coin):
         db.query(MCoin).filter(MCoin.id == obj.id) \
             .update(obj.dict(exclude={'id'}))

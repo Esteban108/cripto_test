@@ -5,6 +5,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 DB_URI = "postgresql://postgres:postgres@172.17.0.2:5432/cripto_db"
 
-REDIS_HOST = "172.17.0.4"
+REDIS_HOST = "172.17.0.3"
 REDIS_PORT = 6379
 REDIS_DB = 0
+REDIS_CACHE_TIME = 60 * 10

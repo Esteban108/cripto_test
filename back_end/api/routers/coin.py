@@ -4,6 +4,7 @@ from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 
 from back_end.api.depends.login_depends import validate_normal_user, validate_admin
+from back_end.api.redis_db.operation import get_and_save
 from ..operations import OpCoin
 from ..schemas import Coin, Status
 from back_end.api.depends.depends import get_db
@@ -15,7 +16,11 @@ router = APIRouter()
 @router.get("/coins/", response_model=Union[List[Coin], Coin], tags=OpCoin.tags)
 def get(coin_id: str = None, skip: int = None, limit: int = None, session: Session = Depends(get_db),
         user_log: dict = Depends(validate_normal_user)):
-    data = OpCoin.op_get(session, coin_id, skip=skip, limit=limit)
+    if coin_id is not None:
+        data = get_and_save("CACHE_" + coin_id, OpCoin.op_get, Coin, session, cid=coin_id)
+    else:
+        data = OpCoin.op_get(session, coin_id, skip=skip, limit=limit)
+
     return data
 
 

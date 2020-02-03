@@ -51,7 +51,7 @@ def op_validate_token(token: str = Depends(oauth2_scheme)):
 
 
 def validate_admin(user: dict = Depends(op_validate_token)):
-    if user["user_type"] != "admin":
+    if user["user_type"] != "ADMIN":
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
             detail="You do haven't access to this resource",
@@ -60,7 +60,7 @@ def validate_admin(user: dict = Depends(op_validate_token)):
 
 
 def validate_normal_user(user: dict = Depends(op_validate_token)):
-    if user["user_type"] not in ["admin", "normal"]:
+    if user["user_type"] not in ["ADMIN", "NORMAL"]:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
             detail="You do haven't access to this resource",
