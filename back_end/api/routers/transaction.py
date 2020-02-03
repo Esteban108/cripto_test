@@ -36,7 +36,7 @@ def create(transaction: Transaction, session: Session = Depends(get_db),
     logged_usr = user_log.get("user_name")
 
     coin = get_and_save("CACHE_" + transaction.coin_id, OpCoin.op_get, Coin, session, cid=transaction.coin_id)
-    if coin.status == 0:
+    if coin is None or coin.status == 0:
         ex.detail = "Invalid coin"
         raise ex
 

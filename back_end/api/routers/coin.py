@@ -1,14 +1,14 @@
 from typing import List
+from typing import Union
 
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 
+from back_end.api.depends.depends import get_db
 from back_end.api.depends.login_depends import validate_normal_user, validate_admin
 from back_end.api.redis_db.operation import get_and_save
 from ..operations import OpCoin
 from ..schemas import Coin, Status
-from back_end.api.depends.depends import get_db
-from typing import Union
 
 router = APIRouter()
 

@@ -45,8 +45,7 @@ class Operations:
     def op_get_transaction_type(db: Session, t_id: int) -> TransactionType:
         return db.query(TransactionType).filter(t_id == TransactionType.id).one()
 
-    """
-    # I NOT NEED THIS METHODS
+    """  # I NOT NEED THIS METHODS
     @staticmethod
     def op_delete(db: Session, transaction_id: int):
         db.query(MTransaction).filter(MTransaction.id == transaction_id).delete()

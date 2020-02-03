@@ -9,6 +9,16 @@ class Coin(BaseModel):
     created_at: date = date.today()
     status: int = 1
 
+    @validator('id')
+    def check_username(cls, v):
+        if ' ' in v:
+            raise ValueError('id not contain a space')
+        if len(v) != 3:
+            raise ValueError('len of id is 3')
+        if v.upper() != v:
+            raise ValueError('id is a text in uppercase')
+        return v
+
     class Config:
         orm_mode = True
 

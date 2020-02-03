@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from ..utils.decorators import sql_errors_controller
 from ..data_access.models import Coin as MCoin
 from ..schemas import Coin
+from ..utils.decorators import sql_errors_controller
 
 
 class Operations:

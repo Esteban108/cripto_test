@@ -1,12 +1,12 @@
 from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_422_UNPROCESSABLE_ENTITY
 
-from ..operations import OpUser
-from back_end.api.depends.login_depends import op_login, validate_normal_user, validate_admin
-from ..schemas import User, UserDB, Status, Token
 from back_end.api.depends.depends import get_db
+from back_end.api.depends.login_depends import validate_normal_user, validate_admin
+from ..operations import OpUser
+from ..schemas import User, UserDB, Status, Token
 from ..utils.hash import pwd_context
 
 router = APIRouter()
@@ -30,7 +30,7 @@ def create(user: UserDB, session: Session = Depends(get_db)):
     user.password = pwd_context.hash(user.password)
     if user.type_id != 2:
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
+            status_code=HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Only can create normal user",
         )
     return OpUser.op_create(session, user)
@@ -63,18 +63,9 @@ def delete(session: Session = Depends(get_db), user_log: dict = Depends(validate
     return s
 
 
-
-"""
-@router.post("/login/", response_model=Token, tags=OpUser.tags)
-def create(c: Credentials, session: Session = Depends(get_db)):
-   # c.password = pwd_context.hash(c.password)
-    return OpLogin.op_login(session, c)
-"""
-
-
 @router.post("/token", response_model=Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_db)):
-    token = op_login(session, form_data.username, form_data.password)
+    token = OpUser.op_login(session, form_data.username, form_data.password)
     if not token:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,

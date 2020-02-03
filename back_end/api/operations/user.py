@@ -1,10 +1,15 @@
+from datetime import timedelta
+
 from sqlalchemy import Numeric, cast
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import func
 
+from back_end.api.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from back_end.api.utils.decorators import sql_errors_controller
-from ..data_access.models import Transaction
-from ..data_access.models import User as MUser
+from back_end.api.utils.hash import pwd_context
+from back_end.api.utils.token import create_access_token
+from ..data_access.models import Transaction, User as MUser
 from ..schemas import User, UserDB
 
 
@@ -44,44 +49,20 @@ class Operations:
 
         return True
 
-    """
     @staticmethod
-    def op_login(db: Session, cred: Credentials):
-        usr: MUser = db.query(MUser).filter(MUser.email == cred.email) \
-            .filter(MUser.password == cred.password).filter(MUser.status == 1).one()
-        if not usr:
-            raise HTTPException(
-                status_code=HTTP_401_UNAUTHORIZED,
-                detail="Incorrect username or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+    def op_login(db: Session, email: str, password: str):
+        try:
+            usr: MUser = db.query(MUser).filter(MUser.email == email).filter(MUser.status == 1).one()
+        except NoResultFound:
+            return None
+
+        if not usr or not pwd_context.verify(password, usr.password):
+            return None
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(data={"user_name": usr.username, "user_type": usr.user_type.description},
                                            expires_delta=access_token_expires)
 
         return {"access_token": access_token, "token_type": "bearer"}
-    
-    @staticmethod
-    def op_validate_token(token: str, user_type_valid: [str]):
-        credentials_exception = HTTPException(
-            status_code=HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-        try:
-            if token is None:
-                raise credentials_exception
-
-            token_data = decode_token(token)
-            date_to_expire = datetime.fromtimestamp(token_data.get("exp"))
-            if datetime.now() > date_to_expire:
-                raise credentials_exception
-            if token_data.get("user_type") not in user_type_valid:
-                raise credentials_exception
-            return True
-        except PyJWTError:
-            raise credentials_exception
-    """
 
     @staticmethod
     @sql_errors_controller

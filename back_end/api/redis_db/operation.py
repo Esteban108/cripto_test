@@ -1,6 +1,7 @@
+import json
+
 from back_end.api.config import REDIS_CACHE_TIME
 from . import R
-import json
 
 
 def get_and_save(key, callable=None, pydanic_model=None, *args, **kwargs):

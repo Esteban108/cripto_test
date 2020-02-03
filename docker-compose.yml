@@ -1,11 +1,13 @@
 version: '0.1'
 services:
-  postgres :
+  postgres:
     container_name: cripto_postgres
     image: postgres
     restart: always
+      volumes:
+        - ./back_end/migrations:/docker-entrypoint-initdb.d/*
     ports:
       - "5432:5432"
   redis:
-        container_name: cripto_redis
-        image: redis:alpine
+    container_name: cripto_redis
+    image: redis:alpine
