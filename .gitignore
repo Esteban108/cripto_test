@@ -1,2 +1,4 @@
 .idea
 /back_end/.pytest_cache
+
+/front-end/node_modules
