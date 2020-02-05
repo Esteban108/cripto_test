@@ -41,7 +41,7 @@ class User(BaseModel):
     username: str
     status: int = 1
 
-    type_id: int
+    type_id: int = 2
 
     @validator('username')
     def check_username(cls, v):
