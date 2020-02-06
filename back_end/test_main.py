@@ -13,7 +13,7 @@ from .api.main import app
 
 client = TestClient(app)
 
-PATH_SCRIPT_DATA = "migrations/init_data.sql"
+PATH_SCRIPT_DATA = "back_end/migrations/init_data.sql"
 
 
 def get_postgres_cursor(host, usr, port, pwd, db):
@@ -70,7 +70,7 @@ def test_trunc_database():
         cursor.close()
         conn.close()
 
-    conn = get_postgres_cursor('172.17.0.2', 'postgres', 5432, 'postgres', 'cripto_db')
+    conn = get_postgres_cursor('cripto_postgres', 'postgres', 5432, 'postgres', 'cripto_db')
     __drop_all(conn)
 
 

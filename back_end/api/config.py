@@ -4,9 +4,9 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 MINUTES_TO_EXPIRE = 15
 
-DB_URI = "postgresql://postgres:postgres@172.17.0.2:5432/cripto_db"
+DB_URI = "postgresql://postgres:postgres@cripto_postgres:5432/cripto_db"
 
-REDIS_HOST = "172.17.0.3"
+REDIS_HOST = "cripto_redis"
 REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_CACHE_TIME = 60 * 10

@@ -68,7 +68,7 @@ class ModalLogin extends Component {
         }
         formBody = formBody.join("&");
 
-        fetch("http://127.0.0.1:8000/token", {
+        fetch("http://localhost:8000/token", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

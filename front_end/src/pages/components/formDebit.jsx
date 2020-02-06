@@ -11,6 +11,7 @@ class FormAddMoney extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleInput = this.handleInput.bind(this);
+
     }
 
 
@@ -31,7 +32,7 @@ class FormAddMoney extends Component {
         return (
             <>
                 <Form>
-                    <Form.Label>Cargar Saldo</Form.Label>
+                    <Form.Label>Debitar</Form.Label>
 
 
                     <Form.Control
