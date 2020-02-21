@@ -25,7 +25,7 @@ CREATE DATABASE cripto_db WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE
 
 ALTER DATABASE cripto_db OWNER TO postgres;
 
-connect cripto_db
+\connect cripto_db
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -131,7 +131,7 @@ ALTER TABLE public.seq_transaction OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.seq_transaction_type
-    START WITH 1
+    START WITH 4
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -145,7 +145,7 @@ ALTER TABLE public.seq_transaction_type OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.seq_user_type
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -368,3 +368,10 @@ ALTER TABLE ONLY public.c_user
 -- PostgreSQL database dump complete
 --
 
+INSERT INTO public.c_transaction_type VALUES (1, 'DEBITO');
+INSERT INTO public.c_transaction_type VALUES (2, 'CARGA');
+INSERT INTO public.c_transaction_type VALUES (3, 'TRANSFERENCIA');
+INSERT INTO public.c_user_type VALUES (2, 'NORMAL');
+INSERT INTO public.c_user_type VALUES (1, 'ADMIN');
+INSERT INTO public.c_user VALUES ('master', 'master@master.com', '$2b$12$JurKjUH0Gpr7fEg/6H0nU.F99bpGVGOYE8BP55JprlWPzPNW6yAIi', 1, 1);
+INSERT INTO public.c_coins VALUES ('Dolares', 'USD', '2020-02-02', 1);

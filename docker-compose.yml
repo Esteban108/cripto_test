@@ -1,4 +1,4 @@
-version: '0.1'
+version: '3.1'
 services:
   front_end:
     container_name: cripto_front_end
@@ -21,8 +21,11 @@ services:
     container_name: cripto_postgres
     image: postgres
     restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
     volumes:
-        - ./back_end/migrations:/docker-entrypoint-initdb.d/*
+        - ./back_end/migrations:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
   redis:
