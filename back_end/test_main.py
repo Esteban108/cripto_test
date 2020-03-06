@@ -13,7 +13,7 @@ from .api.main import app
 
 client = TestClient(app)
 
-PATH_SCRIPT_DATA = "back_end/migrations/init_data.sql"
+PATH_SCRIPT_DATA = "back_end/test_data.sql"
 
 
 def get_postgres_cursor(host, usr, port, pwd, db):

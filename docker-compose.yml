@@ -6,14 +6,14 @@ services:
     volumes:
       - /front_end/node_modules
     ports:
-      - '3000:3000'
+      - '3100:3000'
     links:
       - "back_end:cripto_back_end"
   back_end:
     build: ./back_end
     container_name: cripto_back_end
     ports:
-      - "8000:8000"
+      - "8100:8000"
     links:
       - "postgres:cripto_postgres"
       - "redis:cripto_redis"
@@ -27,7 +27,7 @@ services:
     volumes:
         - ./back_end/migrations:/docker-entrypoint-initdb.d/
     ports:
-      - "5432:5432"
+      - "5100:5432"
   redis:
     container_name: cripto_redis
     image: redis:alpine
