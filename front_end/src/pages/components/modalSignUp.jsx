@@ -69,7 +69,7 @@ class ModalSignUp extends Component {
         }
 
         this.props.toggleLoading();
-        fetch('http://localhost:8000/user/', {
+        fetch('http://localhost:8100/user/', {
             method: 'POST',
             headers: h,
             body: JSON.stringify({

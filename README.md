@@ -8,12 +8,12 @@
 
 ### NetWork
 ```yaml
-backend_swagger: http://localhost:8000/docs #para loguearse en el campo username va el correo
-backend_redoc: http://localhost:8000/redoc
-front_end: http://localhost:3000
+backend_swagger: http://localhost:8100/docs #para loguearse en el campo username va el correo
+backend_redoc: http://localhost:8100/redoc
+front_end: http://localhost:3100
 postgres: 
   host: localhost
-  port: 5432
+  port: 5100
   user: postgres
   password: postgres
 
